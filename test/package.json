@@ -1,0 +1,31 @@
+{
+    "name": "test",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "private": true,
+    "scripts": {
+        "build": "rm -rf pkg && STRING_EXAMPLE=1.2.3 NUMERIC_EXAMPLE=3000 BOOLEAN_EXAMPLE=false ../node_modules/.bin/pika-pack build",
+        "test": "npm run build && node assert.js"
+    },
+    "@pika/pack": {
+        "pipeline": [
+            [
+                "@pika/plugin-ts-standard-pkg"
+            ],
+            [
+                "../pkg",
+                {
+                    "env": [
+                        "STRING_EXAMPLE",
+                        "NUMERIC_EXAMPLE",
+                        "BOOLEAN_EXAMPLE"
+                    ]
+                }
+            ]
+        ]
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
