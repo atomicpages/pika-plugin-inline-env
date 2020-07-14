@@ -1,6 +1,6 @@
 # pika-plugin-inline-env
 
-> Note: this plugin in intended to be used with @pika/plugin-ts-standard-pkg. If you're using @pika/plugin-standard-pkg see the section for how you can configure that pipeline.
+> Note: this plugin in intended to be used with `@pika/plugin-ts-standard-pkg`. If you're using `@pika/plugin-standard-pkg` see the section for how you can configure that pipeline.
 
 A really simple, tiny pika plugin to inline `process.env` environment variables in `dist-src` so downstream builds don't become bloated with extra rollup plugins _or_ [custom solutions](https://github.com/atomicpages/pika-plugin-build-web).
 
@@ -27,7 +27,7 @@ There are two issues here:
 
 ## How it Works
 
-This plugin works by reading your `dist-src/index.js` file using [node fs](https://nodejs.org/api/fs.html), performing a simple search and replace and writing the file back to disk. All operations are **blocking** so make sure there are no other operations on the same file while the plugin is executing.
+This plugin works by reading your `dist-src/index.js` file using [node fs](https://nodejs.org/api/fs.html), performing a simple search and replace and writing the file back to disk. All I/O operations are synchronous so make sure there are no other operations on the same file while the plugin is executing otherwise the file dat could become corrupt.
 
 ## Install
 
@@ -51,7 +51,7 @@ Note: All items under the `env` array are considered to live on `process.env` th
             [
                 "pika-plugin-inline-env",
                 {
-                    "env": ["MY_VERSION", "process.env.DEBUG"]
+                    "env": ["npm_package_version", "process.env.DEBUG"]
                 }
             ]
         ]
@@ -62,7 +62,7 @@ Note: All items under the `env` array are considered to live on `process.env` th
 and to build:
 
 ```sh
-MY_VERSION=1.2.3 DEBUG=false && npx pika build
+DEBUG=false && npx pika build
 ```
 
 > Tip: use [`cross-env`](https://www.npmjs.com/package/cross-env) to ensure this works on windows too
