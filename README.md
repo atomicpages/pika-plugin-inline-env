@@ -1,12 +1,12 @@
 # pika-plugin-inline-env
 
-> Note: this plugin in intended to be used with @pika/plugin-ts-standard-pkg. If you're using @pika/plugin-standard-pkg see the section for how you can configure that pipeline.
+> Note: this plugin in intended to be used with `@pika/plugin-ts-standard-pkg`. If you're using `@pika/plugin-standard-pkg` see that [section for more details](#using-with--pikaplugin-standard-pkg).
 
 A really simple, tiny pika plugin to inline `process.env` environment variables in `dist-src` so downstream builds don't become bloated with extra rollup plugins _or_ [custom solutions](https://github.com/atomicpages/pika-plugin-build-web).
 
-## Motivation
+## Problem
 
-Using the standard ts plugin from pika, there's no way to inline/inject environment variables in the source distribution. The specific use case I have in mind is where we want to surface version information to users of a library as an exported member. Considering the following:
+Using the standard ts plugin from pika, there's no way to inline/inject environment variables in the generated `dist-src` folder. For example:
 
 ```ts
 // some other code...
@@ -27,15 +27,13 @@ There are two issues here:
 
 ## How it Works
 
-This plugin works by reading your `dist-src/index.js` file using [node fs](https://nodejs.org/api/fs.html), performing a simple search and replace and writing the file back to disk. All operations are **blocking** so make sure there are no other operations on the same file while the plugin is executing.
+This plugin works by reading your `dist-src/index.js` (or other configured file) file using [node fs](https://nodejs.org/api/fs.html), performing a simple search and replace and writing the file back to disk. All operations are **blocking** so make sure there are no other operations on the same file while the plugin is executing.
 
 ## Install
 
 ```sh
 npm i @pika/pack pika-plugin-inline-env --save-dev
 ```
-
-Note: `@pika/pack` is a peer dependencies -- you need to install this for this plugin to work.
 
 ## Usage
 
@@ -75,7 +73,7 @@ At the env of the build, we'll be left with a clean, inline environment variable
 
 ```js
 // other code...
-export const VERSION = "1.2.3";
+export const VERSION = '1.2.3';
 ```
 
 For more information about `@pika/pack` &amp; help getting started, [check out the main project repo](https://github.com/pikapkg/pack).
@@ -86,12 +84,13 @@ All options are optional.
 
 | Option       | Type                                                                                        | Default Value | Description                                                                                     |
 | ------------ | ------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------- |
-| `"env"`      | string[]                                                                                    | []            | An array of env variables to replace. If it does not exist an empty string will be used instead |
-| `"debug"`    | boolean \| 'trace'                                                                          | false         | Set true to enable debugging info on build failures                                             |
-| `"encoding"` | [BufferEncoding](https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings) | 'utf-8'       | Override the file read and write encoding                                                       |
-| `"bail"`     | boolean                                                                                     | false         | If an environment variable is missing, fail the build                                           |
+| `"env"`      | `string[]`                                                                                  | `[]`          | An array of env variables to replace. If it does not exist an empty string will be used instead |
+| `"debug"`    | `boolean` \| `'trace'`                                                                      | `false`       | Set true to enable debugging info on build failures                                             |
+| `"encoding"` | [BufferEncoding](https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings) | `'utf-8'`     | Override the file read and write encoding                                                       |
+| `"bail"`     | `boolean`                                                                                   | `false`       | If an environment variable is missing, fail the build                                           |
+| `"file"`     | `string`                                                                                    | `'index.js'`  | Override the file to read and write to                                                          |
 
-## Using with  `@pika/plugin-standard-pkg`
+## Using with `@pika/plugin-standard-pkg`
 
 This is not intended to be used with `@pika/plugin-standard-pkg`, use [`babel-plugin-transform-inline-environment-variables`](https://www.npmjs.com/package/babel-plugin-transform-inline-environment-variables) to inline environment variables using the standard packager.
 

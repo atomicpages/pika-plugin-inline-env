@@ -6,20 +6,43 @@ import { envExists, normalizeEnv, getVarName, getType } from './utils';
 
 type BuilderOptions = Omit<PikaBuilderOptions, 'options'> & {
     options: {
+        /**
+         * An array of environment variables to replace.
+         */
         env?: string[];
+
+        /**
+         * Set true to enable debug mode.
+         * Set to `trace` to see full stack traces.
+         */
         debug?: boolean | 'trace';
+
+        /**
+         * Set the file encoding.
+         */
         encoding?: BufferEncoding;
+
+        /**
+         * Fail-fast if variable replacement fails,
+         * otherwise print a warning to the console.
+         */
         bail?: boolean;
+
+        /**
+         * Specify the file to read from and write to.
+         */
+        file?: string;
     };
 };
 
 export async function build({ out, options = {}, reporter }: BuilderOptions): Promise<void> {
     const opts: BuilderOptions['options'] = {
         encoding: 'utf-8',
+        file: 'index.js',
         ...options,
     };
 
-    const write = path.join(out, 'dist-src', 'index.js');
+    const write = path.join(out, 'dist-src', opts.file);
 
     try {
         let file = fs.readFileSync(write, opts.encoding).toString();
