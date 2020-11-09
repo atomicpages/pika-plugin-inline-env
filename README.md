@@ -49,7 +49,7 @@ Note: All items under the `env` array are considered to live on `process.env` th
             [
                 "pika-plugin-inline-env",
                 {
-                    "env": ["MY_VERSION", "process.env.DEBUG"]
+                    "env": ["npm_package_version", "process.env.DEBUG"]
                 }
             ]
         ]
@@ -60,7 +60,7 @@ Note: All items under the `env` array are considered to live on `process.env` th
 and to build:
 
 ```sh
-MY_VERSION=1.2.3 DEBUG=false && npx pika build
+DEBUG=false && npx pika build
 ```
 
 > Tip: use [`cross-env`](https://www.npmjs.com/package/cross-env) to ensure this works on windows too
