@@ -15,5 +15,5 @@ jobs:
             - name: npm install, build, and test
               run: |
                   npm i
-                  npm t
                   npm run build
+                  npm t
